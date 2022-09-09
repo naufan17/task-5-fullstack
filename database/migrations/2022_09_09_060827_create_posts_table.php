@@ -18,8 +18,8 @@ class CreatePostsTable extends Migration
             $table->text('title');
             $table->longText('content');
             $table->string('image');
-            $table->unsignedBigInteger('user_id')->unique();
-            $table->unsignedBigInteger('category_id')->unique();
+            $table->foreignId('user_id');
+            $table->foreignId('category_id');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');

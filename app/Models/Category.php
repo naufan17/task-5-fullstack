@@ -21,7 +21,12 @@ class Category extends Model
         'user_id',
     ];
 
-    public function post()
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function posts()
     {
         return $this->belongsTo(Post::class);
     }

@@ -24,12 +24,12 @@ class Post extends Model
         'category_id',
     ];
 
-    public function user()
+    public function users()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function category()
+    public function categories()
     {
         return $this->hasMany(Category::class);
     }
