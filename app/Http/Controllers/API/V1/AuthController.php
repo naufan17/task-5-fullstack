@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -14,11 +15,15 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all, [
             'name' => 'required|min:4',
             'email' => 'required|email',
             'password' => 'required|min:8',
         ]);
+
+        if($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
  
         $user = User::create([
             'name' => $request->name,
@@ -48,4 +53,15 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorised'], 401);
         }
     }   
+
+    /**
+     * Logout
+     */
+    public function logout(Request $request)
+    {
+        $token = $request->user()->get('token');
+        $token->revoke();
+           
+        return response()->json(['message' => 'Logout successfully and token was deleted']);
+    }
 }

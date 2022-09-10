@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = auth()->user()->posts()->paginate();
+        $posts = auth()->user()->posts()->paginate(15);
 
         if(!$posts){
             return response()->json([
