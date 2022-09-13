@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -15,7 +16,7 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|min:4',
             'email' => 'required|email',
             'password' => 'required|min:8',
@@ -28,7 +29,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => Hash::make($request->password)
         ]);
        
         $token = $user->createToken('LaravelAuthApp')->accessToken;
@@ -59,8 +60,9 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $token = $request->user()->get('token');
-        $token->revoke();
+        $user = $request->user();
+        
+        $user->tokens()->delete();
            
         return response()->json(['message' => 'Logout successfully and token was deleted']);
     }

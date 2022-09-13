@@ -97,9 +97,7 @@ class PostController extends Controller
             ], 404);
         }
 
-        $updated = $post->fill($request->all())->save();
-
-        if($updated){
+        if($post->fill($request->all())->save()){
             return response()->json([
                 'status' => 'success',
                 'message' => 'Post updated successfully',
@@ -126,7 +124,7 @@ class PostController extends Controller
         if($post->delete()){
             return response()->json([
                 'status' => 'success',
-                'data' => $post
+                'message' => 'Post deleted successfully'
             ], 200);
         }else{
             return response()->json([

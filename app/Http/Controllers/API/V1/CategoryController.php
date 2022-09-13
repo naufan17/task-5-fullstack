@@ -60,7 +60,6 @@ class CategoryController extends Controller
         if(auth()->user()->categories()->save($category)){
             return response()->json([
                 'status' => 'success',
-                'message' => 'category stored successfully',
                 'data' => $category,
             ], 201);
         }else{
@@ -90,9 +89,7 @@ class CategoryController extends Controller
             ], 404);
         }
 
-        $updated = $category->fill($request->all())->save();
-
-        if($updated){
+        if($category->fill($request->all())->save()){
             return response()->json([
                 'status' => 'success',
                 'message' => 'Category updated successfully',
@@ -119,7 +116,7 @@ class CategoryController extends Controller
         if($category->delete()){
             return response()->json([
                 'status' => 'success',
-                'data' => $category
+                'message' => 'Category deleted successfully'
             ], 200);
         }else{
             return response()->json([
