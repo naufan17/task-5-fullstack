@@ -11,9 +11,6 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * Registration
-     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -37,9 +34,6 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 200);
     }
  
-    /**
-     * Login
-     */
     public function login(Request $request)
     {
         $data = [
@@ -51,19 +45,16 @@ class AuthController extends Controller
             $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
             return response()->json(['token' => $token], 200);
         } else {
-            return response()->json(['error' => 'Unauthorised'], 401);
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
     }   
 
-    /**
-     * Logout
-     */
     public function logout(Request $request)
     {
         $user = $request->user();
         
         $user->tokens()->delete();
            
-        return response()->json(['message' => 'Logout successfully and token was deleted']);
+        return response()->json(['message' => 'Logout successfully and token was deleted'], 200);
     }
 }

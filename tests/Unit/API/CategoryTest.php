@@ -13,27 +13,44 @@ use App\Models\User;
 class CategoryTest extends TestCase
 {
     // use RefreshDatabase;
-    use WithFaker;
+    // use WithFaker;
+
+    protected function create_user()
+    {
+        User::create([
+            'name' => 'Testcategory',
+            'email' => 'testcategory@example.com',
+            'password' => Hash::make('testcategorypassword'),
+        ]);
+    }
     
     protected function authenticate()
     {
-        // $user = User::create([
-        //     'name' => 'Testcategory',
-        //     'email' => 'testcategory@example.com',
-        //     'password' => Hash::make('testcategorypassword'),
-        // ]);
+        if(!auth()->attempt(['email' => 'testcategory@example.com', 'password' => 'testcategorypassword'])){
+            return response(['message' => 'Failed']);
+        }
 
-        auth()->attempt(['email' => 'testcategory@example.com', 'password' => 'testcategorypassword']);
+        return auth()->user()->createToken('LaravelAuthApp')->accessToken;
+    }
 
-        return $accessToken = auth()->user()->createToken('LaravelAuthApp')->accessToken;
+    protected function delete_user()
+    {
+        User::where('email','testcategory@example.com')->delete();
+    }
+
+    protected function id_category()
+    {
+        return Category::select('id')->where('name', 'test category')->get();
     }
 
     public function test_create_category()
     {
+        $this->create_user();
+
         $token = $this->authenticate();
 
         $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('POST', 'api/v1/categories', [
-            'name' => 'teknologi',
+            'name' => 'test create category',
         ]);
 
         $response->assertStatus(201);
@@ -43,8 +60,8 @@ class CategoryTest extends TestCase
     {
         $token = $this->authenticate();
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('POST', 'api/v1/categories'. user()->categories()->random()->id, [
-            'name' => 'informasi',
+        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('POST', 'api/v1/categories'. $this->id_category(), [
+            'name' => 'test update category',
         ]);
 
         $response->assertStatus(200);
@@ -63,7 +80,7 @@ class CategoryTest extends TestCase
     {
         $token = $this->authenticate();
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('GET', 'api/v1/categories/'. user()->categories()->random()->id);
+        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('GET', 'api/v1/categories/'. $this->id_category());
 
         $response->assertStatus(200);
     }
@@ -72,8 +89,10 @@ class CategoryTest extends TestCase
     {
         $token = $this->authenticate();
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('DELETE', 'api/v1/categories/'. user()->categories()->random()->id);
+        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('DELETE', 'api/v1/categories/'. $this->id_category());
 
         $response->assertStatus(200);
+
+        $this->delete_user();
     }
 }
