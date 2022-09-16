@@ -1,22 +1,32 @@
 <?php
 
-namespace App\Http\Controllers\API\V1;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Post;
 
 class PostController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $posts = auth()->user()->posts()->paginate(15);
+
+        return view('user.post.index', compact('posts'));
     }
-    
-    public function show($id)
+
+    public function formStore()
     {
-        $post = auth()->user()->posts()->find($id);
+        return view('user.post.store');
     }
     
     public function store(Request $request)
@@ -34,7 +44,7 @@ class PostController extends Controller
         $post->user_id = auth()->user()->id;
         $post->category_id = $request->category_id;
 
-        auth()->user()->posts()->save($post)
+        auth()->user()->posts()->save($post);
     }
     
     public function update(Request $request, $id)
@@ -47,13 +57,13 @@ class PostController extends Controller
 
         $post = auth()->user()->posts()->find($id);
 
-        $post->fill($request->all())->save()
+        $post->fill($request->all())->save();
     }
     
     public function destroy($id)
     {
         $post = auth()->user()->posts()->find($id);
 
-        $post->delete()
+        $post->delete();
     }
 }
