@@ -4,6 +4,9 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Category;
+use App\Models\Post;
 
 class PostController extends Controller
 {
@@ -26,7 +29,9 @@ class PostController extends Controller
 
     public function formStore()
     {
-        return view('user.post.store');
+        $categories = Category::get();
+
+        return view('user.post.store', compact('categories'));
     }
     
     public function store(Request $request)
@@ -34,30 +39,57 @@ class PostController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required',
-            'image' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg',
         ]);
+
+        $file = $request->file('image');
+        $nama_file = rand().$file->getClientOriginalName();
+        $file->move('image', $nama_file);
 
         $post = new Post();
         $post->title = $request->title;
         $post->content = $request->content;
-        $post->image = $request->image;
+        $post->image = $nama_file;
         $post->user_id = auth()->user()->id;
         $post->category_id = $request->category_id;
 
         auth()->user()->posts()->save($post);
+
+        return redirect('/posts');
+    }
+
+    public function formUpdate($id)
+    {
+        $post = auth()->user()->posts()->find($id);
+
+        $categories = Category::get();
+
+        return view('user.post.update', compact('post', 'categories'));
     }
     
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'content' => 'required',
-            'image' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg',
         ]);
 
-        $post = auth()->user()->posts()->find($id);
+        $post = auth()->user()->posts()->find($request->id);
 
-        $post->fill($request->all())->save();
+        $file = $request->file('image');
+        $nama_file = rand().$file->getClientOriginalName();
+        $file->move('image', $nama_file);
+
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->image = $nama_file;
+        $post->user_id = auth()->user()->id;
+        $post->category_id = $request->category_id;
+
+        auth()->user()->posts()->save($post);
+
+        return redirect('/posts');
     }
     
     public function destroy($id)
@@ -65,5 +97,7 @@ class PostController extends Controller
         $post = auth()->user()->posts()->find($id);
 
         $post->delete();
+
+        return redirect('/posts');
     }
 }

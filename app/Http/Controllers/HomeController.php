@@ -16,7 +16,7 @@ class HomeController extends Controller
 
     public function show($id)
     {
-        $post = auth()->user()->posts()->find($id);
+        $post = POST::find($id);
 
         return view('show-post', compact('post'));
     }

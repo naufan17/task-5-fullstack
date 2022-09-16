@@ -10,12 +10,14 @@
             </div>
         </div>
         <div class="md:col-span-2 md:mt-0">
-            <form action="#" method="POST">
+            <form action="{{ url('/categories/update') }}" method="POST">
+                @csrf
                 <div class="border border-gray-400 drop-shadow sm:overflow-hidden sm:rounded-md">
                     <div class="space-y-12 bg-white px-8 py-12 sm:p-12">
                         <div>
+                            <input type="hidden" name="id" value="{{ $category->id }}">
                             <label for="name" class="block text-sm font-semibold text-gray-600">Name</label>
-                            <input type="text" name="name" id="name" class="mt-2 block w-full h-10 p-2 rounded-md border bg-white py-2 px-3 sm:text-sm">
+                            <input type="text" name="name" id="name" value="{{ $category->name }}" class="mt-2 block w-full h-10 p-2 rounded-md border bg-white py-2 px-3 sm:text-sm">
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 text-right sm:px-6">

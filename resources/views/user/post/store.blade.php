@@ -10,16 +10,25 @@
             </div>
         </div>
         <div class="md:col-span-2 md:mt-0">
-            <form action="#" method="POST">
+            <form action="{{ url('/posts/create') }}" method="POST" enctype="multipart/form-data">
+                @csrf
                 <div class="border border-gray-400 drop-shadow sm:overflow-hidden sm:rounded-md">
                     <div class="space-y-12 bg-white px-8 py-12 sm:p-12">
                         <div>
-                            <label for="company-website" class="block text-sm font-semibold text-gray-700">Title</label>
-                            <input type="text" name="company-website" id="company-website" class="mt-2 block w-full h-10 p-2 rounded-md border bg-white py-2 px-3 sm:text-sm">
+                            <label for="title" class="block text-sm font-semibold text-gray-700">Title</label>
+                            <input type="text" name="title" id="title" class="mt-2 block w-full h-10 p-2 rounded-md border bg-white py-2 px-3 sm:text-sm">
                         </div>
                         <div>
-                            <label for="about" class="block text-sm font-semibold text-gray-700">Content</label>
-                            <textarea id="about" name="about" rows="3" class="mt-2 block w-full h-40 p-2 rounded-md border bg-white py-2 px-3 sm:text-sm"></textarea>
+                            <label for="content" class="block text-sm font-semibold text-gray-700">Content</label>
+                            <textarea id="content" name="content" rows="3" class="mt-2 block w-full h-40 p-2 rounded-md border bg-white py-2 px-3 sm:text-sm"></textarea>
+                        </div>
+                        <div>
+                            <label for="category" class="block text-sm font-semibold text-gray-700">Category</label>
+                            <select id="category" name="category_id" class="mt-2 block w-full h-10 p-2 rounded-md border bg-white py-2 px-3 sm:text-sm">
+                                @foreach($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700">Image</label>
@@ -30,8 +39,8 @@
                                     </svg>
                                     <p>Upload a file or drag and drop</p>
                                     <div class="flex text-sm justify-content-center text-gray-600">
-                                        <label for="file-upload" class="relative cursor-pointer">
-                                            <span for="file-upload" class="sr-only">Choose profile photo</span>
+                                        <label for="image" class="relative cursor-pointer">
+                                            <span for="image" class="sr-only">Choose profile photo</span>
                                             <input type="file" name="image" class="block w-full text-sm text-slate-500 file:cursor-pointer file:mr-4 file:ml-8 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" required="required"/>
                                         </label>
                                     </div>

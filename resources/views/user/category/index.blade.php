@@ -16,27 +16,25 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($categories as $category)
                 <tr>
-                    @foreach($categories as $category)
                     <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
                         <div class="flex items-center">
-                            <div class="ml-3">
-                                <p class="text-gray-900 whitespace-no-wrap">
-                                    {{ $category->name }}
-                                </p>
-                            </div>
+                            <p class="text-gray-900 whitespace-no-wrap">
+                                {{ $category->name }}
+                            </p>
                         </div>
                     </td>
                     <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                        <a href="#" class="font-semibold text-green-600 hover:text-green-500">
+                        <a href="/categories/update/{{ $category->id }}" class="font-semibold text-green-600 hover:text-green-500">
                             Edit
                         </a>
-                        <a href="#" class="ml-4 font-semibold text-red-600 hover:text-red-500">
+                        <a href="/categories/delete/{{ $category->id }}" class="ml-4 font-semibold text-red-600 hover:text-red-500">
                             Delete
                         </a>
                     </td>
-                    @endforeach
                 </tr>
+                @endforeach
             </tbody>
         </table>
         {{ $categories->links() }}

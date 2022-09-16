@@ -24,16 +24,20 @@ Auth::routes();
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-Route::get('/posts', [PostController::class, 'index']);
-Route::get('/posts/create', [PostController::class, 'formStore']);
-Route::post('/posts/create', [PostController::class, 'store']);
-Route::get('/posts/update/{id}', [PostController::class, 'formUpdate']);
-Route::post('/posts/update', [PostController::class, 'update']);
-Route::delete('/posts/delete/{id}', [PostController::class, 'destroy']);
+Route::controller(PostController::class)->prefix('posts')->group(function () {
+    Route::get('/', 'index');
+    Route::get('/create', 'formStore');
+    Route::post('/create', 'store');
+    Route::get('/update/{id}', 'formUpdate');
+    Route::post('/update', 'update');
+    Route::get('/delete/{id}', 'destroy');    
+});
 
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/categories/create', [CategoryController::class, 'formStore']);
-Route::post('/categories/create', [CategoryController::class, 'store']);
-Route::get('/categories/update/{id}', [CategoryController::class, 'formUpdate']);
-Route::post('/categories/update', [CategoryController::class, 'update']);
-Route::delete('/categories/delete/{id}', [CategoryController::class, 'destroy']);
+Route::controller(CategoryController::class)->prefix('categories')->group(function () {
+    Route::get('/', 'index');
+    Route::get('/create', 'formStore');
+    Route::post('/create', 'store');
+    Route::get('/update/{id}', 'formUpdate');
+    Route::post('/update', 'update');
+    Route::get('/delete/{id}', 'destroy');    
+});
