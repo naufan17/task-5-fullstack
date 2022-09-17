@@ -21,12 +21,12 @@ class CategoryController extends Controller
 
     public function index()
     {
-        $categories = auth()->user()->categories()->paginate(25);
+        $categories = auth()->user()->categories()->orderBy('name')->paginate(25);
 
         return view('user.category.index', compact('categories'));
     }
 
-    public function formStore()
+    public function create()
     {
         return view('user.category.store');
     }
@@ -46,7 +46,7 @@ class CategoryController extends Controller
         return redirect('/categories');
     }
 
-    public function formUpdate($id)
+    public function edit($id)
     {
         $category = auth()->user()->categories()->find($id);
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Category;
 use App\Models\Post;
@@ -22,12 +23,12 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = auth()->user()->posts()->paginate(15);
+        $posts = auth()->user()->posts()->orderBy('created_at', 'desc')->paginate(15);
 
         return view('user.post.index', compact('posts'));
     }
 
-    public function formStore()
+    public function create()
     {
         $categories = Category::get();
 
@@ -58,7 +59,7 @@ class PostController extends Controller
         return redirect('/posts');
     }
 
-    public function formUpdate($id)
+    public function edit($id)
     {
         $post = auth()->user()->posts()->find($id);
 
@@ -81,6 +82,8 @@ class PostController extends Controller
         $nama_file = rand().$file->getClientOriginalName();
         $file->move('image', $nama_file);
 
+        Storage::delete('public/image/'.$post->old_image);
+
         $post->title = $request->title;
         $post->content = $request->content;
         $post->image = $nama_file;
@@ -95,6 +98,8 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = auth()->user()->posts()->find($id);
+
+        Storage::delete('public/image/'.$post->image);
 
         $post->delete();
 

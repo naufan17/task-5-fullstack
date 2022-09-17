@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="md:col-span-2 md:mt-0">
-            <form action="{{ url('/posts/create') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('/posts/store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="border border-gray-400 drop-shadow sm:overflow-hidden sm:rounded-md">
                     <div class="space-y-12 bg-white px-8 py-12 sm:p-12">
@@ -41,7 +41,7 @@
                                     <div class="flex text-sm justify-content-center text-gray-600">
                                         <label for="image" class="relative cursor-pointer">
                                             <span for="image" class="sr-only">Choose profile photo</span>
-                                            <input type="file" name="image" class="block w-full text-sm text-slate-500 file:cursor-pointer file:mr-4 file:ml-8 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" required="required"/>
+                                            <input type="file" name="image" class="block w-full text-sm text-slate-500 file:cursor-pointer file:mr-4 file:ml-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" required="required"/>
                                         </label>
                                     </div>
                                 </div>

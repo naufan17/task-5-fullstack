@@ -9,7 +9,8 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $guarded = [];
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.

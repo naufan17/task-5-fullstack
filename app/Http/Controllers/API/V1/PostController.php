@@ -11,7 +11,7 @@ class PostController extends Controller
 {
     public function index()
     {
-        $posts = auth()->user()->posts()->paginate(15);
+        $posts = auth()->user()->posts()->orderBy('created_at', 'desc')->paginate(15);
 
         if(!$posts){
             return response()->json([

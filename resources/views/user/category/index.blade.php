@@ -7,10 +7,10 @@
         <table class="min-w-full leading-normal">
             <thead class="border-b-2">
                 <tr>
-                    <th scope="col" class="px-5 py-3 bg-gray-100 border-b border-gray-200 text-gray-800  text-left text-sm font-semibold">
+                    <th scope="col" class="px-5 py-3 bg-gray-100 border-b border-gray-200 text-gray-800  text-left text-md font-semibold">
                         Name
                     </th>
-                    <th scope="col" class="px-5 py-3 bg-gray-100 border-b border-gray-200 text-gray-800  text-left text-sm font-semibold">
+                    <th scope="col" class="px-5 py-3 bg-gray-100 border-b border-gray-200 text-gray-800  text-left text-md font-semibold">
                         Action
                     </th>
                 </tr>
@@ -18,15 +18,15 @@
             <tbody>
                 @foreach($categories as $category)
                 <tr>
-                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
+                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">
                         <div class="flex items-center">
                             <p class="text-gray-900 whitespace-no-wrap">
                                 {{ $category->name }}
                             </p>
                         </div>
                     </td>
-                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-sm">
-                        <a href="/categories/update/{{ $category->id }}" class="font-semibold text-green-600 hover:text-green-500">
+                    <td class="px-5 py-3 border-b border-gray-200 bg-white text-md">
+                        <a href="/categories/edit/{{ $category->id }}" class="font-semibold text-green-600 hover:text-green-500">
                             Edit
                         </a>
                         <a href="/categories/delete/{{ $category->id }}" class="ml-4 font-semibold text-red-600 hover:text-red-500">

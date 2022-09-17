@@ -26,18 +26,18 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::controller(PostController::class)->prefix('posts')->group(function () {
     Route::get('/', 'index');
-    Route::get('/create', 'formStore');
-    Route::post('/create', 'store');
-    Route::get('/update/{id}', 'formUpdate');
+    Route::get('/create', 'create');
+    Route::post('/store', 'store');
+    Route::get('/edit/{id}', 'edit');
     Route::post('/update', 'update');
     Route::get('/delete/{id}', 'destroy');    
 });
 
 Route::controller(CategoryController::class)->prefix('categories')->group(function () {
     Route::get('/', 'index');
-    Route::get('/create', 'formStore');
-    Route::post('/create', 'store');
-    Route::get('/update/{id}', 'formUpdate');
+    Route::get('/create', 'create');
+    Route::post('/store', 'store');
+    Route::get('/edit/{id}', 'edit');
     Route::post('/update', 'update');
     Route::get('/delete/{id}', 'destroy');    
 });

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Post App</title>
+    <title>Blog App</title>
 
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,13 +15,15 @@
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 </head>
-<body>
-    <div id="app">
+<body class="font-sans">
+    <div id="app ">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Post App    
+                <a class="navbar-brand font-semibold" href="{{ url('/') }}">
+                    Blog App    
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>

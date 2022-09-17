@@ -42,7 +42,7 @@
                                     <div class="flex text-sm justify-content-center text-gray-600">
                                         <label for="file-upload" class="relative cursor-pointer">
                                             <span for="file-upload" class="sr-only">Choose profile photo</span>
-                                            <input type="file" name="image" class="block w-full text-sm text-slate-500 file:mr-4 file:ml-8 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" required="required"/>
+                                            <input type="file" name="image" class="block w-full text-sm text-slate-500 file:mr-4 file:ml-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" required="required"/>
                                         </label>
                                     </div>
                                 </div>

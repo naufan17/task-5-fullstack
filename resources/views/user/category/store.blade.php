@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="md:col-span-2 md:mt-0">
-            <form action="{{ url('/categories/create') }}" method="POST">
+            <form action="{{ url('/categories/store') }}" method="POST">
                 @csrf
                 <div class="border border-gray-400 drop-shadow sm:overflow-hidden sm:rounded-md">
                     <div class="space-y-12 bg-white px-8 py-12 sm:p-12">

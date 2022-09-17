@@ -7,9 +7,9 @@
         <h2 class="max-w-lg mb-6 text-3xl font-bold leading-none tracking-tight text-gray-900 sm:text-4xl md:mx-auto">
             {{ $post->title }}
         </h2>
-        <p class="mb-3 text-md font-semibold tracking-wide uppercase">
-            <span class="text-blue-gray-900">Traveling</span>
-            <span class="text-gray-600">— 28 Dec 2020</span>
+        <p class="mb-3 text-lg font-semibold tracking-wide">
+            <span class="text-purple-700">{{ $post->name }} </span>
+            <span class="text-purple-700">- {{ date("d-m-Y", strtotime($post->created_at)) }} </span>
         </p>
     </div>
     <div class="mx-auto lg:max-w-2xl">
@@ -22,6 +22,10 @@
             {{ $post->content }}
         </p>
     </div>
+    <p class="mb-3 text-lg text-center font-semibold tracking-wide">
+        <span class="text-gray-900">Written by </span>
+        <span class="text-gray-600">- {{ $user->name }} </span>
+    </p>
 </div>
 
 @endsection
