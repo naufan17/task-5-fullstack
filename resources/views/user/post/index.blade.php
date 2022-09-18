@@ -16,7 +16,7 @@
                     {{ $post->title }}
                 </h2>
                 <p class="mb-2 text-gray-700">
-                    {{ $post->content }}
+                    {{ mb_strimwidth($post->content, 0, 200, "...") }}
                 </p>
                 <a href="/post/{{ $post->id }}" class="inline-flex items-center font-semibold bg-blue-50 py-2 px-3 rounded text-blue-600 hover:bg-blue-100 hover:text-blue-600">Detail</a>
                 <a href="/posts/edit/{{ $post->id }}" class="ml-2 inline-flex items-center font-semibold bg-green-50 py-2 px-3 rounded text-green-600 hover:bg-green-100 hover:text-green-600">Edit</a>
