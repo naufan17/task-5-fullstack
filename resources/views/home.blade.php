@@ -22,8 +22,10 @@
             </div>
         </div>
         @endforeach
-        {{ $posts->links() }}
     </div>
+</div>
+<div class="p-8 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-16 lg:p-12">
+    {{ $posts->links() }}
 </div>
 
 @endsection

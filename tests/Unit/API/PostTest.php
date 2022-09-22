@@ -3,110 +3,108 @@
 namespace Tests\Unit\API;
 
 // use PHPUnit\Framework\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use App\Models\Category;
-use App\Models\Post;
 use App\Models\User;
 
 class PostTest extends TestCase
-{
-    // use RefreshDatabase;
-    // use WithFaker;
-    
-    protected function create_user()
-    {
-        User::create([
-            'name' => 'Testpost',
-            'email' => 'testpost@example.com',
-            'password' => Hash::make('testpostpassword'),
-        ]);
-    }
-
-    protected function create_category()
+{    
+    /**
+     * A basic unit test example.
+     *
+     * @return void
+     */
+    protected function id_category()
     {
         Category::create([
             'name' => 'test category',
         ]);
-    }
-    
-    protected function authenticate()
-    {
-        auth()->attempt(['email' => 'testpost@example.com', 'password' => 'testpostpassword']);
 
-        return  auth()->user()->createToken('LaravelAuthApp')->accessToken;
+        return Category::select('id')->latest()->first();
     }
 
-    protected function delete_user()
+    public function test_store_post()
     {
-        User::where('email','testpost@example.com')->delete();
-    }
+        Passport::actingAs(User::factory()->create());
 
-    protected function id_category()
-    {
-        return Category::select('id')->where('name', 'test category')->get();
-    }
-
-    public function test_create_post()
-    {
-        $this->create_user();
-
-        $token = $this->authenticate();
-
-        $this->create_category();
-
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('POST', 'api/v1/posts', [
+        $response = $this->json('POST', 'api/v1/posts', [
             'title' => 'test',
             'content' => 'test create post',
-            'image' => 'asdasda',
-            'category_id' => $this->id_category(),
+            'image' => 'image/jpg',
+            'category_id' => $this->id_category()->id,
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(201)->assertJson(['status' => 'success', 'message' => 'Post stored successfully'])->assertJsonStructure([
+            'status',
+            'message',
+            'data' => [
+                'title',
+                'content',
+                'image',
+                'user_id',
+                'category_id',
+                'updated_at',
+                'created_at',
+                'id',
+            ]
+        ]);
+
+        Storage::disk('image')->assertExists($file->hashName());
     }
 
     public function test_update_post()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('POST', 'api/v1/posts'. $this->id_category(), [
+        $response = $this->json('POST', 'api/v1/posts/' . $this->id_category()->id, [
             'title' => 'test',
             'content' => 'test update post',
-            'image' => 'asdasda',
-            'category_id' => $this->id_category(),
+            'image' => 'image/jpg',
+            'category_id' => $this->id_category()->id,
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Post update successfully']);
     }
 
     public function test_get_all_post()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('GET', 'api/v1/posts');
+        $response = $this->json('GET', 'api/v1/posts');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson(['status' => 'success']);
     }
 
     public function test_show_post()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('GET', 'api/v1/posts/'. $this->id_category());
+        $response = $this->json('GET', 'api/v1/posts/' . $this->id_category()->id);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson(['status' => 'success'])->assertJsonStructure([
+            'status',
+            'data' => [
+                'title',
+                'content',
+                'image',
+                'user_id',
+                'category_id',
+                'updated_at',
+                'created_at',
+                'id',
+            ]
+        ]);
     }
 
     public function test_delete_post()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('DELETE', 'api/v1/posts/'. $this->id_category());
+        $response = $this->json('DELETE', 'api/v1/posts/' . $this->id_category()->id);
 
-        $response->assertStatus(200);
-
-        $this->delete_user();
+        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Post deleted successfully']);
     }
 }

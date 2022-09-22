@@ -3,8 +3,6 @@
 namespace Tests\Unit\API;
 
 // use PHPUnit\Framework\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 
@@ -23,7 +21,7 @@ class AuthTest extends TestCase
             'password' => 'testauthpassword',
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJsonStructure(['token']);
     }
 
     public function test_login()
@@ -33,7 +31,7 @@ class AuthTest extends TestCase
             'password' => 'testauthpassword',
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJsonStructure(['token']);
     }
 
     public function test_logout()
@@ -45,8 +43,9 @@ class AuthTest extends TestCase
         $token = auth()->user()->createToken('LaravelAuthApp')->accessToken;
 
         $response = $this->withHeaders(['Authorization' => 'Bearer '. $token])->json('POST', 'api/v1/logout');
-        $response->assertStatus(200);
+        
+        $response->assertStatus(200)->assertJson(['message' => 'Logout successfully and token was deleted']);
 
-        User::where('email','testauth@example.com')->delete();
+        User::where('email', 'testauth@example.com')->delete();
     }
 }

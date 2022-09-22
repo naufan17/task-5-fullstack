@@ -3,96 +3,89 @@
 namespace Tests\Unit\API;
 
 // use PHPUnit\Framework\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\Passport;
 use Tests\TestCase;
 use App\Models\Category;
 use App\Models\User;
 
 class CategoryTest extends TestCase
 {
-    // use RefreshDatabase;
-    // use WithFaker;
-
-    protected function create_user()
-    {
-        User::create([
-            'name' => 'Testcategory',
-            'email' => 'testcategory@example.com',
-            'password' => Hash::make('testcategorypassword'),
-        ]);
-    }
-    
-    protected function authenticate()
-    {
-        if(!auth()->attempt(['email' => 'testcategory@example.com', 'password' => 'testcategorypassword'])){
-            return response(['message' => 'Failed']);
-        }
-
-        return auth()->user()->createToken('LaravelAuthApp')->accessToken;
-    }
-
-    protected function delete_user()
-    {
-        User::where('email','testcategory@example.com')->delete();
-    }
-
+    /**
+     * A basic unit test example.
+     *
+     * @return void
+     */
     protected function id_category()
     {
-        return Category::select('id')->where('name', 'test category')->get();
+        return Category::select('id')->latest()->first();
     }
 
-    public function test_create_category()
+    public function test_store_category()
     {
-        $this->create_user();
+        Passport::actingAs(User::factory()->create());
 
-        $token = $this->authenticate();
-
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('POST', 'api/v1/categories', [
+        $response = $this->json('POST', 'api/v1/categories', [
             'name' => 'test create category',
         ]);
 
-        $response->assertStatus(201);
+        $response->assertStatus(201)->assertJson(['status' => 'success', 'message' => 'Category stored successfully'])->assertJsonStructure([
+            'status',
+            'message',
+            'data' => [
+                'name',
+                'user_id',
+                'updated_at',
+                'created_at',
+                'id',
+            ]
+        ]);
     }
 
     public function test_update_category()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('POST', 'api/v1/categories'. $this->id_category(), [
+        $response = $this->json('POST', 'api/v1/categories/' . $this->id_category()->id, [
             'name' => 'test update category',
         ]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category update successfully']);
     }
 
     public function test_get_all_category()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('GET', 'api/v1/categories');
+        $response = $this->json('GET', 'api/v1/categories');
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson(['status' => 'success']);
     }
 
     public function test_show_category()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('GET', 'api/v1/categories/'. $this->id_category());
+        $response = $this->json('GET', 'api/v1/categories/' . 65);
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertJson(['status' => 'success'])->assertJsonStructure([
+            'status',
+            'data' => [
+                'id',
+                'name',
+                'user_id',
+                'updated_at',
+                'created_at',
+            ]
+        ]);
     }
 
     public function test_delete_category()
     {
-        $token = $this->authenticate();
+        Passport::actingAs(User::factory()->create());
+        
+        $response = $this->json('DELETE', 'api/v1/categories/' . $this->id_category()->id);
 
-        $response = $this->withHeaders(['Authorization' => 'Bearer'. $token])->json('DELETE', 'api/v1/categories/'. $this->id_category());
-
-        $response->assertStatus(200);
-
-        $this->delete_user();
+        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category deleted successfully']);
     }
 }

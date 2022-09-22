@@ -60,6 +60,7 @@ class CategoryController extends Controller
         if(auth()->user()->categories()->save($category)){
             return response()->json([
                 'status' => 'success',
+                'message' => 'Category stored successfully',
                 'data' => $category,
             ], 201);
         }else{
