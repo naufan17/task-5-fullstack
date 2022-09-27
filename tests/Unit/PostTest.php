@@ -30,9 +30,9 @@ class PostTest extends TestCase
 
     public function test_store_post()
     {
-        Storage::fake('avatars');
+        Storage::fake('images');
  
-        $file = UploadedFile::fake()->image('avatar.jpg');
+        $file = UploadedFile::fake()->image('image.jpg');
 
         Passport::actingAs(User::factory()->create());
 
@@ -48,15 +48,15 @@ class PostTest extends TestCase
         $response->assertSee('test');
         $response->assertSee('test store post');  
 
-        Storage::disk('avatars')->assertExists('avatar.jpg');
-        Storage::disk('avatars')->assertMissing('missing.jpg');
+        Storage::disk('images')->assertExists('image.jpg');
+        Storage::disk('images')->assertMissing('missing.jpg');
     }
 
     public function test_update_post()
     {
-        Storage::fake('avatars');
+        Storage::fake('images');
  
-        $file = UploadedFile::fake()->image('avatar.jpg');
+        $file = UploadedFile::fake()->image('image.jpg');
 
         Passport::actingAs(User::factory()->create());
 
@@ -72,8 +72,8 @@ class PostTest extends TestCase
         $response->assertSee('test');
         $response->assertSee('test update post');  
 
-        Storage::disk('avatars')->assertExists('avatar.jpg');
-        Storage::disk('avatars')->assertMissing('missing.jpg');
+        Storage::disk('images')->assertExists('image.jpg');
+        Storage::disk('images')->assertMissing('missing.jpg');
     }
 
     public function test_delete_post()
@@ -84,6 +84,7 @@ class PostTest extends TestCase
 
         $response = $this->get('posts');
 
-        $response->assertDontSee($this->id_post()->name);
+        $response->assertDontSee($this->id_post()->title);
+        $response->assertDontSee($this->id_post()->content);
     }
 }

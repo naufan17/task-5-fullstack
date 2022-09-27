@@ -74,12 +74,12 @@ class CategoryTest extends TestCase
         $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category update successfully']);
     }
 
-    // public function test_delete_category()
-    // {
-    //     Passport::actingAs(User::factory()->create());
+    public function test_delete_category()
+    {
+        Passport::actingAs(User::factory()->create());
         
-    //     $response = $this->delete(route('categories.destroy', $this->id_category()));
+        $response = $this->delete(route('categories.destroy', $this->id_category()));
 
-    //     $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category deleted successfully']);
-    // }
+        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category deleted successfully']);
+    }
 }
