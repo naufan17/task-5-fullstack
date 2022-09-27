@@ -3,7 +3,6 @@
 namespace Tests\Unit\API;
 
 // use PHPUnit\Framework\TestCase;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 use App\Models\Category;
@@ -11,21 +10,16 @@ use App\Models\User;
 
 class CategoryTest extends TestCase
 {
-    /**
-     * A basic unit test example.
-     *
-     * @return void
-     */
     protected function id_category()
     {
-        return Category::select('id')->latest()->first();
+        return Category::latest()->first()->id;
     }
 
     public function test_store_category()
     {
         Passport::actingAs(User::factory()->create());
 
-        $response = $this->json('POST', 'api/v1/categories', [
+        $response = $this->post(route('categories.store'), [
             'name' => 'test create category',
         ]);
 
@@ -42,22 +36,11 @@ class CategoryTest extends TestCase
         ]);
     }
 
-    public function test_update_category()
-    {
-        Passport::actingAs(User::factory()->create());
-
-        $response = $this->json('POST', 'api/v1/categories/' . $this->id_category()->id, [
-            'name' => 'test update category',
-        ]);
-
-        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category update successfully']);
-    }
-
     public function test_get_all_category()
     {
         Passport::actingAs(User::factory()->create());
 
-        $response = $this->json('GET', 'api/v1/categories');
+        $response = $this->get(route('categories.index'));
 
         $response->assertStatus(200)->assertJson(['status' => 'success']);
     }
@@ -66,7 +49,7 @@ class CategoryTest extends TestCase
     {
         Passport::actingAs(User::factory()->create());
 
-        $response = $this->json('GET', 'api/v1/categories/' . 65);
+        $response = $this->get(route('categories.show', $this->id_category()));
 
         $response->assertStatus(200)->assertJson(['status' => 'success'])->assertJsonStructure([
             'status',
@@ -80,12 +63,23 @@ class CategoryTest extends TestCase
         ]);
     }
 
-    public function test_delete_category()
+    public function test_update_category()
     {
         Passport::actingAs(User::factory()->create());
-        
-        $response = $this->json('DELETE', 'api/v1/categories/' . $this->id_category()->id);
 
-        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category deleted successfully']);
+        $response = $this->put(route('categories.update', $this->id_category()), [
+            'name' => 'test update category',
+        ]);
+
+        $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category update successfully']);
     }
+
+    // public function test_delete_category()
+    // {
+    //     Passport::actingAs(User::factory()->create());
+        
+    //     $response = $this->delete(route('categories.destroy', $this->id_category()));
+
+    //     $response->assertStatus(200)->assertJson(['status' => 'success', 'message' => 'Category deleted successfully']);
+    // }
 }

@@ -17,27 +17,27 @@ use App\Http\Controllers\User\PostController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/post/{id}', [HomeController::class, 'show']);
+Route::get('/', [HomeController::class, 'index'])->name('home')->name('home');
+Route::get('/post/{id}', [HomeController::class, 'show'])->name('post.show');
 
 Auth::routes();
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::controller(PostController::class)->prefix('posts')->group(function () {
-    Route::get('/', 'index');
-    Route::get('/create', 'create');
-    Route::post('/store', 'store');
-    Route::get('/edit/{id}', 'edit');
-    Route::post('/update', 'update');
-    Route::get('/delete/{id}', 'destroy');    
+    Route::get('/', 'index')->name('post');
+    Route::get('/create', 'create')->name('post.create');
+    Route::post('/store', 'store')->name('post.store');
+    Route::get('/edit/{id}', 'edit')->name('post.edit');
+    Route::post('/update', 'update')->name('post.update');
+    Route::get('/delete/{id}', 'destroy')->name('post.destroy');    
 });
 
 Route::controller(CategoryController::class)->prefix('categories')->group(function () {
-    Route::get('/', 'index');
-    Route::get('/create', 'create');
-    Route::post('/store', 'store');
-    Route::get('/edit/{id}', 'edit');
-    Route::post('/update', 'update');
-    Route::get('/delete/{id}', 'destroy');    
+    Route::get('/', 'index')->name('category');
+    Route::get('/create', 'create')->name('category.create');
+    Route::post('/store', 'store')->name('category.store');
+    Route::get('/edit/{id}', 'edit')->name('category.edit');
+    Route::post('/update', 'update')->name('category.update');
+    Route::get('/delete/{id}', 'destroy')->name('category.destroy');    
 });

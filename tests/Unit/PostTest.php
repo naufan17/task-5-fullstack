@@ -4,10 +4,11 @@ namespace Tests\Unit;
 
 // use PHPUnit\Framework\TestCase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Passport\Passport;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\User;
 
 class PostTest extends TestCase
@@ -17,66 +18,72 @@ class PostTest extends TestCase
      *
      * @return void
      */
-    protected function create_category()
-    {
-        Category::create([
-            'name' => 'test category',
-        ]);
-    }
-
     protected function id_category()
     {
-        return Category::select('id')->latest()->first();
+        return Category::latest()->first()->id;
     }
 
-    public function test_create_post()
+    protected function id_post()
     {
-        Passport::actingAs(User::factory()->create());
-
-        $response = $this->get('/posts');
-
-        $response->assertSee('');       
+        return Post::latest()->first();
     }
 
     public function test_store_post()
     {
+        Storage::fake('avatars');
+ 
+        $file = UploadedFile::fake()->image('avatar.jpg');
+
         Passport::actingAs(User::factory()->create());
-    }
 
-    public function test_edit_post()
-    {
-        Passport::actingAs(User::factory()->create());
+        $this->post(route('post.store'), [
+            'title' => 'test',
+            'content' => 'test store post',
+            'image' => $file,
+            'category_id' => $this->id_post()->id,
+        ]);
 
-        $response = $this->get('/posts');
+        $response = $this->get('posts');
 
-        $response->assertSee('');
+        $response->assertSee('test');
+        $response->assertSee('test store post');  
+
+        Storage::disk('avatars')->assertExists('avatar.jpg');
+        Storage::disk('avatars')->assertMissing('missing.jpg');
     }
 
     public function test_update_post()
     {
-        Passport::actingAs(User::factory()->create());
-    }
+        Storage::fake('avatars');
+ 
+        $file = UploadedFile::fake()->image('avatar.jpg');
 
-    public function test_get_all_post()
-    {
-        Passport::actingAs(User::factory()->create());
-
-        $response = $this->get('/posts');
-
-        $response->assertSee('');
-    }
-
-    public function test_show_post()
-    {
         Passport::actingAs(User::factory()->create());
 
-        $response = $this->get('/posts');
+        $this->put(route('post.update', $this->id_post()->id), [
+            'title' => 'test',
+            'content' => 'test update post',
+            'image' => $file,
+            'category_id' => $this->id_post()->id,
+        ]);
 
-        $response->assertSee('');
+        $response = $this->get('posts');
+
+        $response->assertSee('test');
+        $response->assertSee('test update post');  
+
+        Storage::disk('avatars')->assertExists('avatar.jpg');
+        Storage::disk('avatars')->assertMissing('missing.jpg');
     }
 
     public function test_delete_post()
     {
         Passport::actingAs(User::factory()->create());
+
+        $this->delete(route('post.destroy', $this->id_post()->id));
+
+        $response = $this->get('posts');
+
+        $response->assertDontSee($this->id_post()->name);
     }
 }
